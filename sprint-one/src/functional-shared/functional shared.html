@@ -1,23 +1,28 @@
-<!DOCTYPE>
+<!DOCTYPE HTML>
 <html>
 <head>
-<script src="queue.js"/>
-<script src="stack.js"/>
-<script>
-for (var i = 0; i <= 10000; i++) {
-  i = makeStack();
-  for (var j = 0; j < 10; j++) {
-    i.push(j);
-  }
-}
-for (var i = 0; i <= 10000; i++) {
-  i = makeQueue();
-  for (var j = 0; j < 10; j++) {
-    i.enqueue(j);
-  }
-}
-</script>
+<script src="queue.js" ></script>
+<script src="stack.js" ></script>
+<script src="../../../lib/underscore/underscore.js"></script>
+
 </head>
 <body>
+	<script type="text/javascript">
+		for (var i = 0; i < 10000; i++) {
+			var number = i;
+			number = makeStack();
+
+			for (var j = 0; j < 10; j++) {
+				number.push(j);
+			}
+		}
+		for (var i = 0; i <= 10000; i++) {
+			var number = i;
+			number = makeQueue();
+			for (var j = 0; j < 10; j++) {
+				number.enqueue(j);
+			}
+		}
+	</script>
 </body>
 </html>
