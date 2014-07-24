@@ -1,0 +1,23 @@
+<!DOCTYPE>
+<html>
+<head>
+<script src="queue.js"/>
+<script src="stack.js"/>
+<script>
+for (var i = 0; i <= 10000; i++) {
+  i = makeStack();
+  for (var j = 0; j < 10; j++) {
+    i.push(j);
+  }
+}
+for (var i = 0; i <= 10000; i++) {
+  i = makeQueue();
+  for (var j = 0; j < 10; j++) {
+    i.enqueue(j);
+  }
+}
+</script>
+</head>
+<body>
+</body>
+</html>
