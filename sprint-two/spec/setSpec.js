@@ -24,4 +24,26 @@ describe('set', function() {
     expect(set.contains("Mel Gibson")).to.equal(false);
   });
 
+  it("should contain a value that was added", function(){
+    set.add('Labrador');
+    set.add('Poodle');
+    expect(set.contains('Labrador')).to.equal(true);
+    expect(set.contains('Poodle')).to.equal(true);
+    expect(set.contains('Labradoodle')).to.equal(false);
+  });
+
+  it('should not contain a value that was removed', function(){
+    set.add('Labrador');
+    set.add('Poodle');
+    set.remove('Labrador');
+    expect(set.contains('Labrador')).to.equal(false);
+  });
+
+  it("should not add duplicate values", function(){
+    set.add('Labrador');
+    set.add('Labrador');
+    expect(set.count()).to.equal(1);
+  });
+
+
 });
