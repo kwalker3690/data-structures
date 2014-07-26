@@ -34,13 +34,13 @@ HashTable.prototype.increaseSize = function(){
     for(var key in this._newStore){
       this.insert(key, this._newStore[key])
     }
-}
+};
 
 HashTable.prototype.retrieve = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
   console.log(k)
-  console.log(this._storage)
   console.log(this._storage.get(i))
+
   var currentItem = this._storage.get(i);
   for(var j = 0; j < currentItem.length; j++){
     if(currentItem[j] === k){

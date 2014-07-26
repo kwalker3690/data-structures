@@ -35,6 +35,7 @@ binaryMethods.insert = function(newValue){
 binaryMethods.contains = function(match) {
   var result = false;
   var searchTree = function(tree) {
+    //TODO: this can be refactored with while
     if (match === tree.value) {
       result = true
     } else if (match > tree.value && (tree.right !==null)) {
@@ -49,13 +50,17 @@ binaryMethods.contains = function(match) {
 
 binaryMethods.depthFirstLog = function(callback){
   // if no left and no right
-  if(this.left === null && this.right === null){
-    callback(this)
-    //run callback on node
-  }else{
-    //make sure that left or right exists
+  callback(this.value)
+  //make sure that left or right exists
+  if(this.left){
     this.left.depthFirstLog(callback);
+  }else if(this.right){
     this.right.depthFirstLog(callback)
+  }
+
+  if(this.left === null && this.right === null){
+    return;
+    //run callback on node
   }
 
 
