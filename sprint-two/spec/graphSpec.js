@@ -57,4 +57,14 @@ describe('graph', function() {
     expect(graph.contains('jacket')).to.equal(false);
   });
 
+  // it('should return true for a value that the tree contains', function(){
+  //   graph.addNode('grapes');
+  //   expect(graph.contains('grapes')).to.equal(true);
+  // });
+
+  // it('should return false for a value that was not added', function(){
+  //   graph.addNode('grapes');
+  //   expect(graph.contains('pizza')).to.equal(true);
+  // });
+
 });
