@@ -7,49 +7,78 @@ var HashTable = function(){
 
 HashTable.prototype.insert = function(k, v){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  if(this._storage.get(i) === undefined){
-    this._storage.set(i, [k,v]);
-    this._counter++;
-  }else{
-    this._storage.get(i).push(k,v);
-    this._counter++;
+  // have to see if key already is in bucket!
+  var bucket = this._storage.get(i);
+  if(bucket === undefined){
+  	bucket = [];
+    this._storage.set(i, bucket);
   }
 
-  if(this._counter >= this._limit*.75){
-    this.increaseSize();
+  var found = false;
+
+  for(var j = 0; j<bucket.length; j++){
+
+  	var tuple = bucket[j];
+  	if(tuple[0]===k){
+  		tuple[1]===v
+  		found = true;
+  		break;
+  	}
   }
+
+  if(!found){
+    bucket.push([k,v]);
+    this._counter++;
+    if(this._counter > .75 * this._limit){
+	    this.resize(this._limit *= 2);
+	  }
+  }
+
+
+
 
 };
 
 
-HashTable.prototype.increaseSize = function(){
-// i think we are not mapping these correctly?
-    this._limit *= 2;
+HashTable.prototype.resize = function(newSize){
 
-    this._newStore = this._storage;
+    newStore = this._storage;
 
-    this._storage = makeLimitedArray(this.limit)
+    this._storage = makeLimitedArray(newSize);
+    this._limit = newSize;
+    this._counter = 0;
 
     var holder = this;
-    // use the each function to do this instead!
-    this._newStore.each(function(value, key, collection){
-		console.log(value, 'value', key, 'key')
-		console.log(holder)
-		holder.insert(key, value)
-	})
-
-    this._storage.each(function(value, key, collection){
-		console.log(value, 'value', key, 'key')
+    newStore.each(function(bucket, key, collection){
+    	if(bucket === undefined){
+    		return;
+    	}
+    	for(var j = 0; j < bucket.length; j++){
+    		var tuple = bucket[j];
+			holder.insert(tuple[0], tuple[1])
+    	}
 	})
 };
 
 HashTable.prototype.retrieve = function(k){
   var i = getIndexBelowMaxForKey(k, this._limit);
-  var currentItem = this._storage.get(i);
-  for(var j = 0; j < currentItem.length; j++){
-    if(currentItem[j] === k){
-      return currentItem[j+1];
+  var bucket = this._storage.get(i);
+  var found = false;
+
+  if(bucket === undefined){
+  	return null;
+  }
+
+  for(var j = 0; j < bucket.length; j++){
+  	var tuple = bucket[j];
+    if(tuple[0] === k){
+    	found = true;
+		return tuple[1];
     }
+  }
+
+  if(!found){
+  	return null
   }
 };
 
@@ -58,43 +87,23 @@ HashTable.prototype.remove = function(k){
 	// 	console.log(value, 'value', key, 'key')
 	// })
   var i = getIndexBelowMaxForKey(k, this._limit);
-  // console.log(k, 'k remove')
-  // console.log(i, 'i remove')
-  // console.log(this._storage.get(i), 'this._storage.get(i) remove')
-  var currentItem = this._storage.get(i);
+  var bucket = this._storage.get(i);
   var toDelete;
-  // console.log(this._counter, 'this._counter before')
-  for(var j = 0; j < currentItem.length; j++){
-    if(currentItem[j] === k){
-      toDelete = currentItem[j+1];
-      currentItem[j+1] = null;
+
+  for(var j = 0; j < bucket.length; j++){
+  	var tuple = bucket[j];
+    if( tuple[0] === k){
+    	bucket.splice(j);
+    	this._counter--;
+    	if (this._counter < this._limit*.25) {
+			this.resize(this._limit /= 2)
+		}
+    	return tuple[1]
     }
   }
 
-  for(var k = 0; k < this._limit; k++){
-  	this._counter = 1*k
-  }
-  // this should only run if number of items in storage is less than half the limit
-  // if only one added, counter only goes up one and this will run!
-  if (this._counter <= this._limit*.75) {
-		this.decreaseSize()
-	}
-
-  return toDelete;
+  return null;
 };
-
-
-HashTable.prototype.decreaseSize = _.once(function(){
-    this._limit /= 2;
-
-    this._newStore = this._storage;
-    this._storage = makeLimitedArray(this.limit)
-
-    for(var key in this._newStore){
-      this.insert(key, this._newStore[key])
-    }
-})
-
 
 /*
  * Complexity: What is the time complexity of the above functions?
